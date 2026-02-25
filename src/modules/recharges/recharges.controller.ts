@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BuyRechargeDto } from './dto/buy-recharge.dto';
@@ -14,6 +14,14 @@ export class RechargesController {
   @Post('buy')
   buy(@Body() dto: BuyRechargeDto, @Req() req: Request) {
     return this.rechargesService.buyRecharge(dto, (req as any).user);
+  }
+
+  // GET /recharges/history
+  // Devuelve solo las transacciones del usuario autenticado
+  @UseGuards(JwtAuthGuard)
+  @Get('history')
+  history(@Req() req: Request) {
+    return this.rechargesService.findHistoryByUser((req as any).user);
   }
 }
 
