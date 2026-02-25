@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './modules/auth/auth.module.js';
 
+// Módulo raíz de la aplicación
 @Module({
-  imports: [],
+  imports: [
+    // Configuración global de variables de entorno (.env)
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    // Módulo de autenticación (Nivel 0)
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
