@@ -15,6 +15,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       // Intenta castear tipos de entrada según el DTO (por ejemplo, strings a numbers)
       transform: true,
+      // Devuelve solo el primer error por propiedad (evita mensajes redundantes)
+      stopAtFirstError: true,
     }),
   );
 
