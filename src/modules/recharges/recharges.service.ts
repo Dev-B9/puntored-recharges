@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BuyRechargeDto } from './dto/buy-recharge.dto';
@@ -22,13 +22,22 @@ export class RechargesService {
       throw new BadRequestException('Invalid phoneNumber');
     }
 
-    const transaction = this.transactionRepository.create({
-      amount: dto.amount,
-      phoneNumber: dto.phoneNumber,
-      userId: user?.username,
-    });
+    let transaction: Transaction;
+    try {
+      transaction = this.transactionRepository.create({
+        amount: dto.amount,
+        phoneNumber: dto.phoneNumber,
+        userId: user?.username,
+      });
+    } catch (err) {
+      throw new InternalServerErrorException('Failed to create transaction');
+    }
 
-    return this.transactionRepository.save(transaction);
+    try {
+      return await this.transactionRepository.save(transaction);
+    } catch (err) {
+      throw new InternalServerErrorException('Failed to save transaction');
+    }
   }
 
   // Devuelve el historial de recargas del usuario autenticado
