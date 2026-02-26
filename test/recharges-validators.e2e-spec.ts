@@ -22,32 +22,26 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { initTestApp, loginAndGetToken } from './setup';
 
 describe('Recharges validators (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({ imports: [AppModule] }).compile();
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await initTestApp();
   });
 
   afterAll(async () => {
     await app.close();
   });
 
-  const loginAndGetToken = async () => {
-    const res = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ username: 'testuser', password: 'password123' });
-    return res.body.access_token;
-  };
+  // login helper is provided by test/setup
 
   // =========================
   // CASOS CORRECTOS (2xx)
   // =========================
   it('POST /recharges/buy -> 2xx accepts valid payload', async () => {
-    const token = await loginAndGetToken();
+    const token = await loginAndGetToken(app);
 
     await request(app.getHttpServer())
       .post('/recharges/buy')
@@ -62,7 +56,7 @@ describe('Recharges validators (e2e)', () => {
   // ERRORES DE CLIENTE (4xx)
   // =========================
   it('POST /recharges/buy -> 400 rejects amount out of range', async () => {
-    const token = await loginAndGetToken();
+    const token = await loginAndGetToken(app);
 
     await request(app.getHttpServer())
       .post('/recharges/buy')
@@ -72,7 +66,7 @@ describe('Recharges validators (e2e)', () => {
   });
 
   it('POST /recharges/buy -> 400 rejects invalid phone', async () => {
-    const token = await loginAndGetToken();
+    const token = await loginAndGetToken(app);
 
     await request(app.getHttpServer())
       .post('/recharges/buy')

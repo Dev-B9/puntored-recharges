@@ -19,25 +19,16 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe, HttpStatus } from '@nestjs/common';
+import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { initTestApp } from './setup';
 
 describe('AuthController (e2e) - POST /auth/login', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
-    app = moduleRef.createNestApplication();
-    app.useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-        stopAtFirstError: true,
-      }),
-    );
-    await app.init();
+    app = await initTestApp();
   });
 
   afterAll(async () => {

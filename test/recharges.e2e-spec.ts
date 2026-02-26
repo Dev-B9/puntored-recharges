@@ -27,46 +27,38 @@ import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { RechargesService } from '../src/modules/recharges/recharges.service';
 import { JwtAuthGuard } from '../src/modules/auth/guards/jwt-auth.guard';
+import { initTestApp, loginAndGetToken } from './setup';
 
 describe('Recharges (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({ imports: [AppModule] }).compile();
-    app = moduleFixture.createNestApplication();
-    await app.init();
+    app = await initTestApp();
   });
 
   afterAll(async () => {
     await app.close();
   });
-
-  const loginAndGetToken = async (): Promise<string> => {
-    const res = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ username: 'testuser', password: 'password123' });
-    return res.body.access_token;
-  };
-
   // =========================
-  // [2xx] CASOS CORRECTOS
+  // [2xx] Success cases
   // =========================
   it('POST /recharges/buy -> 2xx returns created recharge', async () => {
-    const token = await loginAndGetToken();
+    const token = await loginAndGetToken(app);
 
-    await request(app.getHttpServer())
+    const res = await request(app.getHttpServer())
       .post('/recharges/buy')
       .set('Authorization', `Bearer ${token}`)
       .send({ amount: 5000, phoneNumber: '3101234567' })
-      .expect((res) => {
-        if (res.status < 200 || res.status >= 300) throw new Error('Expected 2xx response');
-        expect(res.body).toHaveProperty('id');
-        expect(res.body.amount).toBe(5000);
+      .expect((r) => {
+        if (r.status < 200 || r.status >= 300) throw new Error('Expected 2xx response');
       });
+
+    expect(res.body).toHaveProperty('id');
+    expect(res.body.amount).toBe(5000);
   });
 
   it('GET /recharges/history -> 200 returns user history', async () => {
-    const token = await loginAndGetToken();
+    const token = await loginAndGetToken(app);
 
     const res = await request(app.getHttpServer())
       .get('/recharges/history')
@@ -82,7 +74,7 @@ describe('Recharges (e2e)', () => {
   });
 
   it('GET /recharges/history -> 200 returns empty array for new user', async () => {
-    const token = await loginAndGetToken(); // si fuera otro usuario sin recargas
+    const token = await loginAndGetToken(app);
 
     const res = await request(app.getHttpServer())
       .get('/recharges/history')
@@ -93,10 +85,10 @@ describe('Recharges (e2e)', () => {
   });
 
   // =========================
-  // [4xx] ERRORES DE CLIENTE (buy)
+  // [4xx] Client errors (buy)
   // =========================
   it('POST /recharges/buy -> 400 rejects invalid payload', async () => {
-    const token = await loginAndGetToken();
+    const token = await loginAndGetToken(app);
 
     await request(app.getHttpServer())
       .post('/recharges/buy')
@@ -106,16 +98,14 @@ describe('Recharges (e2e)', () => {
   });
 
   // =========================
-  // [401] TOKEN INVÁLIDO / FALTANTE (history)
+  // [401] Unauthorized (history)
   // =========================
   it('GET /recharges/history -> 401 when token missing', async () => {
-    await request(app.getHttpServer())
-      .get('/recharges/history')
-      .expect(401);
+    await request(app.getHttpServer()).get('/recharges/history').expect(401);
   });
 
   // =========================
-  // [5xx] ERRORES DE SERVIDOR (buy)
+  // [5xx] Server errors (buy)
   // =========================
   it('POST /recharges/buy -> 500 when service throws error', async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({ imports: [AppModule] })
