@@ -29,6 +29,13 @@ El desarrollo de este proyecto sigue una estrategia de ramificación organizada 
 
 ---
 
+ 🔑 **Credenciales para Pruebas (Login)**:
+
+ Para interactuar con el endpoint `/auth/login`, utilice las credenciales sugeridas en la documentación técnica:
+ * **Username**: `testuser` 
+ * **Password**: `password123`
+---
+
 1.  **Instalar dependencias**:
     ```bash
     npm install
