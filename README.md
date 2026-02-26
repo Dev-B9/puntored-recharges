@@ -1,172 +1,131 @@
-# PuntoRed Backend – NestJS + TypeScript
+# 🚀 PuntoRed Backend – Niveles 0 a 3 (NestJS + TypeScript)
 
-## Ejecución rápida
+Este proyecto es un **MVP (Producto Mínimo Viable)** funcional de un backend para la gestión de **recargas móviles** con JWT y SQLite. Está desarrollado con **NestJS** y **TypeScript**, implementando una arquitectura de **DDD (Domain-Driven Design) pragmático** que evoluciona desde una autenticación básica hasta un sistema modular y escalable.
 
-1. Instalar dependencias:
-   npm install
+El proyecto sirve como base sólida para un portal transaccional integral que permitirá la expansión futura hacia pagos de servicios, compra de pines y transferencias bancarias.
 
-2. Configurar variables de entorno en `.env`:
-   PORT=3000
-   JWT_SECRET=super-secret-jwt-key
-   JWT_EXPIRES_IN=3600s
+---
 
-3. Levantar servidor en desarrollo:
-   npm run start:dev
+## 📋 Requisitos Previos
 
-4. Probar endpoints:
+* **Node.js**: >= 18 
+* **npm**: >= 9 
+* **SQLite**: no requiere instalación externa; usado vía TypeORM.
+* **IDE recomendado**: VSCode 
 
-* Login: POST [http://localhost:3000/auth/login](http://localhost:3000/auth/login)
-  Body (JSON):
-  { "username": "testuser", "password": "password123" }
-* Comprar recarga: POST [http://localhost:3000/recharges/buy](http://localhost:3000/recharges/buy)
-  Body (JSON):
-  { "amount": 5000, "phoneNumber": "3101234567" }
-  Requiere Authorization: Bearer <JWT> obtenido en login.
+---
 
-## Objetivo
+## 🛠️ Ejecución del Proyecto
 
-Nivel 0 y 1 enfocados en:
+1.  **Instalar dependencias**:
+    ```bash
+    npm install
+    ``` 
 
-* Endpoint POST /auth/login con usuario hardcodeado
-* Endpoint POST /recharges/buy protegido por JWT Guard
-* Validación de DTOs para login y recargas
-* Simulación de respuesta de recarga con id, amount, phoneNumber, userId y createdAt
-* Preparación para futura arquitectura DDD
+2.  **Configurar variables de entorno (`.env`)**:
+    ```env
+    PORT=3000
+    JWT_SECRET=630ac854c378afa120f2629bd2a4b0eea4a5708a406759a0a755e8fd5ad4e9f9b9e4fa5d7cb25f197db39d0d2360232840e7e125f01b1cb3cf616e57f4915a3d
+    JWT_EXPIRES_IN=3600s
+    DB_PATH=src/infra/db/puntored.sqlite
+    ``` 
+3.  **Scripts disponibles**:
+    * **Levantar servidor (Desarrollo)**: `npm run start:dev` 
+    * **Ejecutar pruebas unitarias**: `npm run test` 
+    * **Ejecutar pruebas end-to-end (e2e)**: `npm run test:e2e`
 
-## Stack y librerías
+---
 
-* Framework: NestJS
-* Lenguaje: TypeScript
-* JWT: @nestjs/jwt, jsonwebtoken
-* Configuración: @nestjs/config
-* Validación: class-validator, class-transformer
+## 🧰 Librerías y Stack Utilizado
 
-## Estructura del proyecto
+* **Framework**: NestJS
+* **Lenguaje**: TypeScript
+* **Autenticación**: `@nestjs/jwt`, `jsonwebtoken`
+* **Configuración**: `@nestjs/config`
+* **Validación**: `class-validator`, `class-transformer` 
+* **Base de Datos**: SQLite + TypeORM 
+* **Testing**: Jest, Supertest 
 
+---
+
+## 🛤️ Niveles de Implementación
+
+### 🔹 Nivel 0: Configuración y Autenticación JWT
+* **Funcionalidad**: Endpoint `POST /auth/login` con usuario hardcodeado y generación de token JWT
+* **Validación**: DTO + `ValidationPipe` global
+* **Decisiones Técnicas**:
+    * **SRP**: `UserService` para credenciales y `AuthService` para JWT
+    * `ConfigModule` global para variables de entorno
+    * Estructura inicial de carpeta `domain/`
+
+### 🔹 Nivel 1: Lógica de Negocio y Validaciones
+* **Funcionalidad**: Endpoint `POST /recharges/buy`
+* **Validación**: Control de montos y formato de `phoneNumber` vía `BuyRechargeDto`
+* **Decisiones Técnicas**:
+    * Uso de validators personalizados: `AmountRangeValidator` y `PhoneNumberFormatValidator`
+    * Servicios limpios delegando validación a DTOs
+
+### 🔹 Nivel 2: Persistencia de Datos e Historial
+* **Funcionalidad**: Persistencia con SQLite y endpoint `GET /recharges/history`
+* **Decisiones Técnicas**:
+    * Entidad `Transaction` ubicada en `modules/recharges/domain/`
+    * Uso de `TypeOrmModule.forRootAsync()` en `AppModule`
+    * Entidad de dominio separada para mantener la lógica desacoplada
+
+### 🔹 Nivel 3: Calidad (Pruebas)
+* **Cobertura**: Casos exitosos (2xx), errores de cliente (4xx) y errores de servidor (5xx)
+* **Pruebas**: Unitarias junto al código (`.spec.ts`) y e2e en carpeta `test/`
+* **Decisiones Técnicas**:
+    * Mocks de servicios y guards para simular fallos
+    * Tests como documentación viva de casos de uso
+
+### 🔹 Arquitectura avanzada – DDD pragmático (MVP)
+Organización modular basada en dominios:
+
+```text
 src/
-main.ts
-app.module.ts
-modules/
-auth/
-auth.module.ts
-auth.controller.ts
-auth.service.ts
-user.service.ts
-dto/login.dto.ts
-password-length.validator.ts
-recharges/
-recharges.module.ts
-recharges.controller.ts
-recharges.service.ts
-dto/buy-recharge.dto.ts
-validators/amount-range.validator.ts
-validators/phone-number-format.validator.ts
-auth/guards/jwt-auth.guard.ts
-auth/strategies/jwt.strategy.ts
-domain/
-.gitkeep
-.env
+├─ app.controller.ts
+├─ app.controller.spec.ts
+├─ app.module.ts
+├─ app.service.ts
+├─ main.ts
+├─ modules/
+│  ├─ auth/
+│  │  ├─ controllers/
+│  │  ├─ domain/
+│  │  ├─ dto/
+│  │  ├─ guards/
+│  │  ├─ services/
+│  │  ├─ strategies/
+│  │  └─ validators/
+│  └─ recharges/
+│     ├─ controllers/
+│     ├─ domain/
+│     ├─ dto/
+│     ├─ services/
+│     └─ validators/
+└─ infra/
+   └─ db/
+       └─ puntored.sqlite (no versionado)
 
-## Casos de prueba – POST /auth/login (Nivel 0)
+test/
+│  ├─ e2e
+├─ setup.ts
+└─ jest-e2e.json
 
-1. Login correcto
-   Request body:
-   { "username": "testuser", "password": "password123" }
-   HTTP 200 OK
-   Response:
-   { "access_token": "<JWT válido>" }
+``` 
+#### ⚙️ Decisiones Técnicas 
+* **Enfoque Pragmático**: No se fuerza un DDD puro; la estructura sigue principios estratégicos pero es flexible, ya que muchas entidades actuales son simples y no requieren lógica de dominio compleja.
+* **Escalabilidad**: El sistema está diseñado para evolucionar de forma ordenada al agregar lógica de negocio densa, persistencia avanzada o sistemas de eventos.
+* **Servicios Limpios y SRP**: Aplicación estricta del Principio de Responsabilidad Única y separación clara de responsabilidades en cada capa.
+* **Dominio Reutilizable**: Carpeta `domain/` preparada para contener la lógica de negocio central y ser fácilmente reusable.
+* **Capa de Infraestructura**: Separación del directorio `infra/` para gestionar helpers de base de datos, logs y el bus de eventos de forma aislada.
+* **Calidad de Código**: Estrategia de tests e2e totalmente independientes de los unitarios, garantizando claridad en el mantenimiento y la validación del flujo.
 
-2. Usuario incorrecto
-   Request body:
-   { "username": "wronguser", "password": "password123" }
-   HTTP 401 Unauthorized
-   Response:
-   {
-   "statusCode": 401,
-   "message": "Invalid username or password",
-   "error": "Unauthorized"
-   }
 
-3. Password incorrecto
-   Request body:
-   { "username": "testuser", "password": "wrongpass" }
-   HTTP 401 Unauthorized
-   Response:
-   {
-   "statusCode": 401,
-   "message": "Invalid username or password",
-   "error": "Unauthorized"
-   }
+---
 
-4. Username vacío
-   Request body:
-   { "username": "", "password": "password123" }
-   HTTP 400 Bad Request
-   Response:
-   ["username should not be empty"]
-
-5. Password < 6 caracteres
-   Request body:
-   { "username": "testuser", "password": "123" }
-   HTTP 400 Bad Request
-   Response:
-   ["password must be longer than or equal to 6 characters"]
-
-## Casos de prueba – POST /recharges/buy (Nivel 1)
-
-1. Recarga correcta
-   Request body:
-   { "amount": 5000, "phoneNumber": "3101234567" }
-   HTTP 201 Created
-   Response:
-   {
-   "id": "<uuid>",
-   "phoneNumber": "3101234567",
-   "amount": 5000,
-   "userId": "testuser",
-   "createdAt": "<ISO date>"
-   }
-
-2. Monto fuera de rango
-   Request body:
-   { "amount": 500000, "phoneNumber": "3101234567" }
-   HTTP 400 Bad Request
-   Response:
-   ["amount must be between 1000 and 100000"]
-
-3. Monto no numérico
-   Request body:
-   { "amount": "cinco mil", "phoneNumber": "3101234567" }
-   HTTP 400 Bad Request
-   Response:
-   ["amount must be a number"]
-
-4. Número de teléfono inválido
-   Request body:
-   { "amount": 5000, "phoneNumber": "1234567890" }
-   HTTP 400 Bad Request
-   Response:
-   ["phoneNumber must be a 10-digit number starting with 3"]
-
-5. Body vacío
-   Request body:
-   {}
-   HTTP 400 Bad Request
-   Response:
-   ["amount should not be empty", "phoneNumber should not be empty"]
-
-## Decisiones técnicas
-
-* DTOs + ValidationPipe global: centraliza validaciones y mantiene los servicios limpios
-* SRP:
-
-  * UserService: valida credenciales
-  * AuthService: genera JWT y maneja errores de autenticación
-  * RechargesService: lógica de negocio y validación de reglas de recarga
-* JWT Guard: protege endpoints de recargas
-* Preparación DDD: carpeta domain/ lista para lógica de dominio futura
-
-## Notas
-
-* Nivel 0 enfocado en autenticación y estructura inicial
-* Nivel 1 enfocado en lógica de negocio de recargas y validación de entradas
+## 📝 Notas Finales
+* Preparado para escalabilidad y tests automatizados.
+* Seguridad implementada mediante JWT, validación DTO y guards.
+* Este backend se considera un **MVP funcional** de un portal transaccional, estructurado para evolucionar hacia un sistema de gran escala sin necesidad de refactorizaciones profundas.
