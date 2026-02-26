@@ -15,8 +15,6 @@ El proyecto sirve como base sólida para un portal transaccional integral que pe
 
 ---
 
-## 🛠️ Ejecución del Proyecto
-
 ## 🌿 Flujo de Trabajo y Ramas
 
 El desarrollo de este proyecto sigue una estrategia de ramificación organizada para garantizar la estabilidad de cada nivel:
@@ -35,6 +33,8 @@ El desarrollo de este proyecto sigue una estrategia de ramificación organizada 
  * **Username**: `testuser` 
  * **Password**: `password123`
 ---
+
+## 🛠️ Ejecución del Proyecto
 
 1.  **Instalar dependencias**:
     ```bash
