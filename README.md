@@ -41,8 +41,11 @@ El desarrollo de este proyecto sigue una estrategia de ramificación organizada 
     ``` 
 3.  **Scripts disponibles**:
     * **Levantar servidor (Desarrollo)**: `npm run start:dev` 
+    * **Levantar servidor (Producción)**: `npm run start:prod`
     * **Ejecutar pruebas unitarias**: `npm run test -- --verbose` 
     * **Ejecutar pruebas end-to-end (e2e)**: `npm run test:e2e -- --verbose`
+
+El archivo de base de datos SQLite se crea (o utiliza) automáticamente en la ruta definida por `DB_PATH` (por defecto `src/infra/db/puntored.sqlite`), por lo que no requiere instalación ni configuración externa de un motor de base de datos.
 
 ---
 
@@ -50,11 +53,13 @@ El desarrollo de este proyecto sigue una estrategia de ramificación organizada 
 
 * **Framework**: NestJS
 * **Lenguaje**: TypeScript
-* **Autenticación**: `@nestjs/jwt`, `jsonwebtoken`
+* **Autenticación**: `@nestjs/jwt`, `jsonwebtoken`, `@nestjs/passport`, `passport`, `passport-jwt`
 * **Configuración**: `@nestjs/config`
 * **Validación**: `class-validator`, `class-transformer` 
 * **Base de Datos**: SQLite + TypeORM 
+* **Identificadores únicos**: `uuid` (IDs de transacciones)
 * **Testing**: Jest, Supertest 
+* **Calidad / Tooling**: ESLint, Prettier, ts-jest (estilo, formato y soporte a pruebas)
 
 ---
 
@@ -86,56 +91,4 @@ El desarrollo de este proyecto sigue una estrategia de ramificación organizada 
 * **Cobertura**: Casos exitosos (2xx), errores de cliente (4xx) y errores de servidor (5xx)
 * **Pruebas**: Unitarias junto al código (`.spec.ts`) y e2e en carpeta `test/`
 * **Decisiones Técnicas**:
-    * Mocks de servicios y guards para simular fallos
-    * Tests como documentación viva de casos de uso
-
-### 🔹 Arquitectura avanzada – DDD pragmático (MVP)
-Organización modular basada en dominios:
-
-```text
-src/
-├─ app.controller.ts
-├─ app.controller.spec.ts
-├─ app.module.ts
-├─ app.service.ts
-├─ main.ts
-├─ modules/
-│  ├─ auth/
-│  │  ├─ controllers/
-│  │  ├─ domain/
-│  │  ├─ dto/
-│  │  ├─ guards/
-│  │  ├─ services/
-│  │  ├─ strategies/
-│  │  └─ validators/
-│  └─ recharges/
-│     ├─ controllers/
-│     ├─ domain/
-│     ├─ dto/
-│     ├─ services/
-│     └─ validators/
-└─ infra/
-   └─ db/
-       └─ puntored.sqlite (no versionado)
-
-test/
-│  ├─ e2e
-├─ setup.ts
-└─ jest-e2e.json
-
-``` 
-#### ⚙️ Decisiones Técnicas 
-* **Enfoque Pragmático**: No se fuerza un DDD puro; la estructura sigue principios estratégicos pero es flexible, ya que muchas entidades actuales son simples y no requieren lógica de dominio compleja.
-* **Escalabilidad**: El sistema está diseñado para evolucionar de forma ordenada al agregar lógica de negocio densa, persistencia avanzada o sistemas de eventos.
-* **Servicios Limpios y SRP**: Aplicación estricta del Principio de Responsabilidad Única y separación clara de responsabilidades en cada capa.
-* **Dominio Reutilizable**: Carpeta `domain/` preparada para contener la lógica de negocio central y ser fácilmente reusable.
-* **Capa de Infraestructura**: Separación del directorio `infra/` para gestionar helpers de base de datos, logs y el bus de eventos de forma aislada.
-* **Calidad de Código**: Estrategia de tests e2e totalmente independientes de los unitarios, garantizando claridad en el mantenimiento y la validación del flujo.
-
-
----
-
-## 📝 Notas Finales
-* Preparado para escalabilidad y tests automatizados.
-* Seguridad implementada mediante JWT, validación DTO y guards.
-* Este backend se considera un **MVP funcional** de un portal transaccional, estructurado para evolucionar hacia un sistema de gran escala sin necesidad de refactorizaciones profundas.
+    * Mocks de servicios y guards para simular fallo
