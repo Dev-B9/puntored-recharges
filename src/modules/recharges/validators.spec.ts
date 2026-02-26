@@ -1,3 +1,22 @@
+/**
+ * Archivo: src/modules/recharges/validators.spec.ts
+ * ------------------------------------------------
+ * Resumen: Pruebas unitarias para `AmountRangeValidator` y
+ * `PhoneNumberFormatValidator`.
+ *
+ * Propósito:
+ *  - Comprobar que los validadores custom aceptan/rechazan valores
+ *    según las reglas de negocio.
+ *
+ * Categorías que cubre:
+ *  - [2xx] Valores válidos o delegados a otras validaciones.
+ *  - [4xx] Valores fuera de rango o con formato inválido.
+ *
+ * Ejecución:
+ *  - Todos los tests: `npm test`
+ *  - Solo este archivo: `npx jest src/modules/recharges/validators.spec.ts --runInBand`
+ */
+
 import { AmountRangeValidator } from './validators/amount-range.validator';
 import { PhoneNumberFormatValidator } from './validators/phone-number-format.validator';
 
@@ -11,7 +30,7 @@ describe('AmountRangeValidator', () => {
 
   it('returns true for non-number (delegates to type validators)', () => {
     expect(v.validate('abc' as any)).toBe(true);
-    expect(v.validate(12.34 as any)).toBe(true); // non-integer -> true (type error handled elsewhere)
+    expect(v.validate(12.34 as any)).toBe(true); // non-integer handled elsewhere
   });
 
   it('validates numbers inside range', () => {

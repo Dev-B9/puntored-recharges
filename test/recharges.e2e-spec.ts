@@ -1,26 +1,24 @@
 /**
- * test/recharges.e2e-spec.ts
- * --------------------------
- * Pruebas end-to-end para `/recharges/buy` y `/recharges/history`.
+ * Archivo: test/recharges.e2e-spec.ts
+ * ------------------------------------------------
+ * Resumen: Pruebas end-to-end para `/recharges/buy` y `/recharges/history`.
  *
  * Propósito:
- *  - Verificar comportamiento de compra de recargas y consulta de historial a través del API.
- *  - Validar casos correctos (2xx), errores de cliente (4xx) y errores de servidor (5xx).
- *  - Asegurar que JWT funciona para autorización.
+ *  - Verificar compra de recargas y consulta de historial, incluyendo
+ *    validaciones, autorización y manejo de errores internos.
  *
- * Estructura:
- *  - [2xx] : compra correcta de recarga, historial correcto.
- *  - [4xx] : payload inválido (buy).
- *  - [401] : token faltante o inválido (history).
- *  - [5xx] : errores internos simulados.
+ * Categorías que cubre:
+ *  - [2xx] Éxitos: compra y lectura del historial.
+ *  - [4xx] Errores de cliente: payload inválido en `buy`.
+ *  - [401] Autorización: token faltante o inválido para `history`.
+ *  - [5xx] Errores del servidor simulados.
  *
- * Cómo ejecutar:
- *  - Todas las pruebas e2e: npm run test:e2e
- *  - Solo este archivo: npm run test:e2e -- test/recharges.e2e-spec.ts
+ * Ejecución:
+ *  - Todas las e2e: `npm run test:e2e`
+ *  - Solo este archivo: `npm run test:e2e -- test/recharges.e2e-spec.ts`
  *
  * Notas:
- *  - Se sobrescriben providers y guards para simular errores internos.
- *  - Usa `supertest` para peticiones HTTP al Nest app.
+ *  - Algunos tests sobrescriben providers/guards para simular fallos.
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -53,7 +51,7 @@ describe('Recharges (e2e)', () => {
   // =========================
   // [2xx] CASOS CORRECTOS
   // =========================
-  it('POST /recharges/buy -> success', async () => {
+  it('POST /recharges/buy -> 2xx returns created recharge', async () => {
     const token = await loginAndGetToken();
 
     await request(app.getHttpServer())
@@ -67,7 +65,7 @@ describe('Recharges (e2e)', () => {
       });
   });
 
-  it('GET /recharges/history -> returns user history', async () => {
+  it('GET /recharges/history -> 200 returns user history', async () => {
     const token = await loginAndGetToken();
 
     const res = await request(app.getHttpServer())
@@ -83,7 +81,7 @@ describe('Recharges (e2e)', () => {
     });
   });
 
-  it('GET /recharges/history -> returns empty array for new user', async () => {
+  it('GET /recharges/history -> 200 returns empty array for new user', async () => {
     const token = await loginAndGetToken(); // si fuera otro usuario sin recargas
 
     const res = await request(app.getHttpServer())
@@ -97,7 +95,7 @@ describe('Recharges (e2e)', () => {
   // =========================
   // [4xx] ERRORES DE CLIENTE (buy)
   // =========================
-  it('POST /recharges/buy -> 400 on invalid payload', async () => {
+  it('POST /recharges/buy -> 400 rejects invalid payload', async () => {
     const token = await loginAndGetToken();
 
     await request(app.getHttpServer())
@@ -110,7 +108,7 @@ describe('Recharges (e2e)', () => {
   // =========================
   // [401] TOKEN INVÁLIDO / FALTANTE (history)
   // =========================
-  it('GET /recharges/history -> 401 if token missing', async () => {
+  it('GET /recharges/history -> 401 when token missing', async () => {
     await request(app.getHttpServer())
       .get('/recharges/history')
       .expect(401);
@@ -119,10 +117,10 @@ describe('Recharges (e2e)', () => {
   // =========================
   // [5xx] ERRORES DE SERVIDOR (buy)
   // =========================
-  it('POST /recharges/buy -> 500 when service throws', async () => {
+  it('POST /recharges/buy -> 500 when service throws error', async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(RechargesService)
-      .useValue({ buyRecharge: () => { throw new Error('boom'); }, findHistoryByUser: () => [] })
+      .useValue({ buyRecharge: () => { throw new Error('Simulated internal server error for testing 500 response'); }, findHistoryByUser: () => [] })
       .overrideGuard(JwtAuthGuard)
       .useValue({ canActivate: () => true })
       .compile();

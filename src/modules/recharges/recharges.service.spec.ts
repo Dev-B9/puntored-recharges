@@ -1,19 +1,24 @@
 /**
- * src/modules/recharges/recharges.service.spec.ts
+ * Archivo: src/modules/recharges/recharges.service.spec.ts
  * ------------------------------------------------
- * Unit tests para RechargesService
- * Nivel 3: Calidad
- * 
+ * Resumen: Pruebas unitarias para `RechargesService`.
+ *
  * Propósito:
- *  - Verificar la lógica de negocio de recargas.
- *  - Asegurar validación de montos y phoneNumber.
- *  - Cubrir casos de éxito (2xx), errores de cliente (4xx) y errores de servidor (5xx).
- * 
- * Estructura:
- *  - [2xx] : compra correcta de recarga, historial correcto.
- *  - [4xx] : validaciones de montos y phoneNumber.
- *  - [5xx] : errores internos simulados (p. ej., fallo en save o create)
+ *  - Verificar la lógica de negocio de compra de recargas y manejo del historial.
+ *
+ * Categorías que cubre:
+ *  - [2xx] Éxitos: creación y guardado de transacciones, lectura de historial.
+ *  - [4xx] Validaciones: monto fuera de rango y formato de teléfono inválido.
+ *  - [5xx] Errores internos: simulación de fallos en `create`/`save` del repositorio.
+ *
+ * Ejecución:
+ *  - Todos los tests: `npm test`
+ *  - Solo unit tests: `npx jest src/modules/recharges/recharges.service.spec.ts --runInBand`
+ *
+ * Notas:
+ *  - Estas pruebas usan un `mockRepository` para aislar la lógica del servicio.
  */
+
 
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { RechargesService } from './recharges.service';
