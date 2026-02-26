@@ -20,7 +20,7 @@
  */
 
 import { UnauthorizedException } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 
 /**
  * Unit tests para AuthService

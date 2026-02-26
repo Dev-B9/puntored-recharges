@@ -24,10 +24,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { RechargesService } from '../src/modules/recharges/recharges.service';
-import { JwtAuthGuard } from '../src/modules/auth/guards/jwt-auth.guard';
-import { initTestApp, loginAndGetToken } from './setup';
+import { AppModule } from '../../src/app.module';
+import { RechargesService } from '../../src/modules/recharges/services/recharges.service';
+import { JwtAuthGuard } from '../../src/modules/auth/guards/jwt-auth.guard';
+import { initTestApp, loginAndGetToken } from '../setup';
 
 describe('Recharges (e2e)', () => {
   let app: INestApplication;

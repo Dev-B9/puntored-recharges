@@ -19,7 +19,7 @@ import { Transaction } from './modules/recharges/domain/transaction.entity';
       inject: [ConfigService],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
         type: 'sqlite',
-        database: configService.get<string>('DB_PATH') ?? 'puntored.sqlite',
+        database: configService.get<string>('DB_PATH'),
         entities: [Transaction],
         // Para la prueba técnica, generamos el esquema automáticamente.
         // En producción se recomienda usar migraciones explícitas.
