@@ -17,6 +17,16 @@ El proyecto sirve como base sólida para un portal transaccional integral que pe
 
 ## 🛠️ Ejecución del Proyecto
 
+## 🌿 Flujo de Trabajo y Ramas
+
+El desarrollo de este proyecto sigue una estrategia de ramificación organizada para garantizar la estabilidad de cada nivel:
+
+* **`develop`**: Es la rama principal de integración. Aquí se consolida el código estable y testeado (Niveles 0 al 4) y sirve como base para las pruebas integradas del MVP.
+
+* **`feature/level-X`**: Cada fase del proyecto o nueva funcionalidad se desarrolla en una rama independiente (ej. `feature/level-3-tests`).
+
+---
+
 1.  **Instalar dependencias**:
     ```bash
     npm install
@@ -25,14 +35,14 @@ El proyecto sirve como base sólida para un portal transaccional integral que pe
 2.  **Configurar variables de entorno (`.env`)**:
     ```env
     PORT=3000
-    JWT_SECRET=630ac854c378afa120f2629bd2a4b0eea4a5708a406759a0a755e8fd5ad4e9f9b9e4fa5d7cb25f197db39d0d2360232840e7e125f01b1cb3cf616e57f4915a3d
+    JWT_SECRET=tu-secret-key
     JWT_EXPIRES_IN=3600s
     DB_PATH=src/infra/db/puntored.sqlite
     ``` 
 3.  **Scripts disponibles**:
     * **Levantar servidor (Desarrollo)**: `npm run start:dev` 
-    * **Ejecutar pruebas unitarias**: `npm run test` 
-    * **Ejecutar pruebas end-to-end (e2e)**: `npm run test:e2e`
+    * **Ejecutar pruebas unitarias**: `npm run test -- --verbose` 
+    * **Ejecutar pruebas end-to-end (e2e)**: `npm run test:e2e -- --verbose`
 
 ---
 
