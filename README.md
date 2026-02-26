@@ -25,7 +25,7 @@ El desarrollo de este proyecto sigue una estrategia de ramificación organizada 
 
 * **`develop`**: Es la rama principal de integración. Aquí se consolida el código estable y testeado (Niveles 0 al 4) y sirve como base para las pruebas integradas del MVP.
 
-* **`feature/level-X`**: Cada fase del proyecto o nueva funcionalidad se desarrolla en una rama independiente (ej. `feature/level-3-tests`).
+* **`feature/level-X`**: Cada fase del proyecto o nueva funcionalidad se desarrolla en una rama independiente (ej. `feature/level-5-tests`).
 
 ---
 
@@ -94,3 +94,54 @@ El archivo de base de datos SQLite se crea (o utiliza) automáticamente en la ru
 * **Pruebas**: Unitarias junto al código (`.spec.ts`) y e2e en carpeta `test/`
 * **Decisiones Técnicas**:
     * Mocks de servicios y guards para simular fallo
+
+### 🔹 Arquitectura avanzada – DDD pragmático (MVP)
+Organización modular basada en dominios:
+
+```text
+src/
+├─ app.controller.ts
+├─ app.controller.spec.ts
+├─ app.module.ts
+├─ app.service.ts
+├─ main.ts
+├─ modules/
+│  ├─ auth/
+│  │  ├─ controllers/
+│  │  ├─ domain/
+│  │  ├─ dto/
+│  │  ├─ guards/
+│  │  ├─ services/
+│  │  ├─ strategies/
+│  │  └─ validators/
+│  └─ recharges/
+│     ├─ controllers/
+│     ├─ domain/
+│     ├─ dto/
+│     ├─ services/
+│     └─ validators/
+└─ infra/
+   └─ db/
+       └─ puntored.sqlite (no versionado)
+
+test/
+│  ├─ e2e
+├─ setup.ts
+└─ jest-e2e.json
+
+``` 
+#### ⚙️ Decisiones Técnicas 
+* **Enfoque Pragmático**: No se fuerza un DDD puro; la estructura sigue principios estratégicos pero es flexible, ya que muchas entidades actuales son simples y no requieren lógica de dominio compleja.
+* **Escalabilidad**: El sistema está diseñado para evolucionar de forma ordenada al agregar lógica de negocio densa, persistencia avanzada o sistemas de eventos.
+* **Servicios Limpios y SRP**: Aplicación estricta del Principio de Responsabilidad Única y separación clara de responsabilidades en cada capa.
+* **Dominio Reutilizable**: Carpeta `domain/` preparada para contener la lógica de negocio central y ser fácilmente reusable.
+* **Capa de Infraestructura**: Separación del directorio `infra/` para gestionar helpers de base de datos, logs y el bus de eventos de forma aislada.
+* **Calidad de Código**: Estrategia de tests e2e totalmente independientes de los unitarios, garantizando claridad en el mantenimiento y la validación del flujo.
+
+
+---
+
+## 📝 Notas Finales
+* Preparado para escalabilidad y tests automatizados.
+* Seguridad implementada mediante JWT, validación DTO y guards.
+* Este backend se considera un **MVP funcional** de un portal transaccional, estructurado para evolucionar hacia un sistema de gran escala sin necesidad de refactorizaciones profundas.
