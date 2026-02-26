@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BuyRechargeDto } from './dto/buy-recharge.dto';
-import { Transaction } from './domain/transaction.entity';
+import { BuyRechargeDto } from '../dto/buy-recharge.dto';
+import { Transaction } from '../domain/transaction.entity';
 
 @Injectable()
 export class RechargesService {

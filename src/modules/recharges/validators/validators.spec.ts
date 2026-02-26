@@ -17,8 +17,8 @@
  *  - Solo este archivo: `npx jest src/modules/recharges/validators.spec.ts --runInBand`
  */
 
-import { AmountRangeValidator } from './validators/amount-range.validator';
-import { PhoneNumberFormatValidator } from './validators/phone-number-format.validator';
+import { AmountRangeValidator } from './amount-range.validator';
+import { PhoneNumberFormatValidator } from './phone-number-format.validator';
 
 describe('AmountRangeValidator', () => {
   const v = new AmountRangeValidator();

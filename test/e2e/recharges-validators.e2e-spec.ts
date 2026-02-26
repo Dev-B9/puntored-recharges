@@ -21,8 +21,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { initTestApp, loginAndGetToken } from './setup';
+import { AppModule } from '../../src/app.module';
+import { initTestApp, loginAndGetToken } from '../setup';
 
 describe('Recharges validators (e2e)', () => {
   let app: INestApplication;

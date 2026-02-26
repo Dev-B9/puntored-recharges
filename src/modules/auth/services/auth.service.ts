@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from './dto/login.dto';
-import { UserService } from './user.service';
+import { LoginDto } from '../dto/login.dto';
+import { UserService } from '../services/user.service';
 
 // Servicio responsable de la lógica de autenticación (generar JWT)
 @Injectable()

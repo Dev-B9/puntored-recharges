@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import type { Request } from 'express';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { BuyRechargeDto } from './dto/buy-recharge.dto';
-import { RechargesService } from './recharges.service';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'; ;
+import { BuyRechargeDto } from '../dto/buy-recharge.dto';
+import { RechargesService } from '../services/recharges.service';
 
 @Controller('recharges')
 export class RechargesController {

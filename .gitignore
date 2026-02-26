@@ -17,3 +17,6 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local SQLite DB
+src/infra/db/puntored.sqlite

@@ -14,9 +14,9 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('health', () => {
+    it('should return "PuntoRed Recharges API is up" on /health"', () => {
+      expect(appController.getHello()).toBe('PuntoRed Recharges API is up');
     });
   });
 });

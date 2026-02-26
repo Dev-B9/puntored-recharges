@@ -21,8 +21,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { initTestApp } from './setup';
+import { AppModule } from '../../src/app.module';
+import { initTestApp } from '../setup';
 
 describe('AuthController (e2e) - POST /auth/login', () => {
   let app: INestApplication;
