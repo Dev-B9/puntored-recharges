@@ -21,6 +21,8 @@ El proyecto sirve como base sólida para un portal transaccional integral que pe
 
 El desarrollo de este proyecto sigue una estrategia de ramificación organizada para garantizar la estabilidad de cada nivel:
 
+* **`main`**: Rama de producción. Contiene únicamente versiones estables, probadas y documentadas del MVP listas para despliegue.
+
 * **`develop`**: Es la rama principal de integración. Aquí se consolida el código estable y testeado (Niveles 0 al 4) y sirve como base para las pruebas integradas del MVP.
 
 * **`feature/level-X`**: Cada fase del proyecto o nueva funcionalidad se desarrolla en una rama independiente (ej. `feature/level-3-tests`).
